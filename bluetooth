@@ -1,0 +1,25 @@
+import bluetooth
+
+def send_message(address, message):
+    port = 1  # Commonly used port for Bluetooth communication
+    sock = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
+    try:
+        sock.connect((address, port))
+        sock.send(message)
+        print(f"Message sent to {address}")
+    except Exception as e:
+        print(f"Failed to send message to {address}: {e}")
+    finally:
+        sock.close()
+
+message = "Hello from Python!"
+
+print("Searching for devices...")
+
+nearby_devices = bluetooth.discover_devices(duration=8, lookup_names=True, flush_cache=True, lookup_class=False)
+
+print(f"Found {len(nearby_devices)} devices.")
+
+for addr, name in nearby_devices:
+    print(f"Sending message to {addr} - {name}")
+    send_message(addr, message)
